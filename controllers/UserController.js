@@ -1,7 +1,9 @@
-const User = require("../models/UserModel");
+const bcrypt = require("bcrypt");
+const db = require("../models/index");
+const User = db.UserModel;
 
 exports.GetUser = async (req, res) => {
-  await Users.findAll({
+  await User.findAll({
     attributes: ["name", "phone", "email"],
     where: { role: 2 },
   })
@@ -24,7 +26,7 @@ exports.StoreUser = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  let data = await Users.create({ name, phone, email, password })
+  let data = await User.create({ name, phone, email, password })
     .then((data) => {
       res
         .json({
@@ -42,7 +44,7 @@ exports.StoreUser = async (req, res) => {
 };
 
 exports.EditUser = async (req, res) => {
-  await Users.findByPk(
+  await User.findByPk(
     {
       attributes: ["name", "phone", "email"],
     },
@@ -73,7 +75,7 @@ exports.UpdateUser = async (req, res) => {
     return res.json(400).json({ errors: errors.array() });
   }
 
-  await Users.update(
+  await User.update(
     { name, phone, email },
     {
       where: { id: id },
@@ -99,7 +101,7 @@ exports.UpdateUser = async (req, res) => {
 
 exports.DeleteUser = async (req, res) => {
   const id = req.params.id;
-  await Users.destroy({
+  await User.destroy({
     where: { id: id },
   })
     .then((num) => {
